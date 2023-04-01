@@ -1,0 +1,55 @@
+// parameters for sn ejecta
+
+//Time Range//
+T_Start			0.0
+T_End			40.0e10
+
+//Output Frequency//
+Num_Reports		10
+Num_Snapshots		10
+Num_Checkpoints		100
+Use_Logtime		0
+
+//Grid Dimensions//
+Num_R			8000
+R_Min			0.0
+R_Max			5.0e19
+Log_Zoning		0	//0=Uniform, 1=Log, 2=Hybrid
+Log_Radius		3.0	//Only for option 2 of Log_Zoning
+
+Max_Aspect_Short        2.0 
+Max_Aspect_Long         2.0     //Aspect Ratio AMR Refinement Criteria
+
+//Numerical Parameters
+CFL			0.2
+PLM			1.0
+Riemann_Solver		1	//0=HLL, 1=HLLC
+Mesh_Motion		1	//0=Fixed, 1=By Cell, 2=Riemann Solver
+Density_Floor		0.0 // 1.0e-26
+Pressure_Floor		0.0 // 1.0e-12
+Absorb_Inner		0
+
+//Hydro Parameters
+Adiabatic_Index		1.666667 //1.33333333333 //1.666666666667
+
+//Gravity Parameters
+Gravity_Switch		0
+Gravity_G		6.67428e-8
+Gravity_Pointmass	0.0 //3.02e33
+Gravity_E_Mode		3   //0 = Source term, 3 = Energy term: G m/r
+Gravity_Balanced	1
+
+
+//RT Model Parameters
+Use_RT			1
+Measure_Growth		0
+
+RT_A			1.176e-5
+RT_B			1.2
+RT_C			0.102
+RT_D			0.0
+
+//Paper 1: A = 1.176e-5, B = 1.2, C = 0.102, D = 0.0
+//Paper 2: A = 1e-3, 	 B = 2.5, C = 0.2,   D = 2.0
+
+

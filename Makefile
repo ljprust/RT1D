@@ -1,11 +1,12 @@
 
-INITIAL  = hse3
+INITIAL  = sn
 HYDRO    = euler
 OUTPUT   = ascii
 
 UNAME = $(shell uname)
 ifeq ($(UNAME),Linux)
-H55 = /home/install/app/hdf5
+#H55 = /home/install/app/hdf5
+H55 = /home/uwm/ljprust/Data/ljprust/hdf5-1.12.2/hdf5
 endif
 ifeq ($(UNAME),Darwin)
 H55 = /opt/local
