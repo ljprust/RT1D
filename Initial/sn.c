@@ -5,7 +5,7 @@
 void setICparams( struct domain * theDomain ){
 }
 
-void initial( double * prim , double r ){
+void initial( double * prim , double r , double densRead ){
 
    double rho, P, v, X;
    double Eej, Mej, t0, vmax, rhoISM;
@@ -15,15 +15,16 @@ void initial( double * prim , double r ){
    double Msun = 2.0e33;
    double yr = 365.25*24.0*3600.0; // sec
    double day = 24.0*3600.0;
-   bool wind, powerlaw;
+   bool wind, powerlaw, readejecta;
 
    wind = true;
    powerlaw = true;
+   readejecta = true;
 
-   Eej    = 1.0e51; // 1.0e51;
-   Mej    = 2.5*Msun; // 2.0e33;
+   Eej    = 1.31e51; // 1.0e51;
+   Mej    = 2.25*Msun;
    t0     = 50.0*day;
-   vmax   = 1.72e9;
+   vmax   = 2.5926e9; // 1.72e9;
    vwind  = 10.0e5;
    Mdot   = 4.0e-5*Msun/yr;
    rhoISM = 5.0e-25; // 1.6e-24;
@@ -46,29 +47,25 @@ void initial( double * prim , double r ){
       rhoISM = Mdot/4.0/3.14159/r/r/vwind;
    }
 
-   if(powerlaw){
-      if( r < rt ){
-         rho = rhoIn;
-         v = vr;
-         X = 1.0;
-      } else if(r < r0){
-         rho = rhoOut;
-         v = vr;
-         X = 1.0;
-      } else {
-         rho = rhoISM;
-         v = 0.0;
-         X = 0.0;
-      }
-   } else {
-      if( r < r0 ){
+   if(r > r0) { // ----- ISM ----------
+      rho = rhoISM;
+      v = 0.0;
+      X = 0.0;
+   } else { // -------- ejecta --------
+      X = 1.0;
+      v = vr;
+      if(powerlaw){ // ----- tony broken power law -----
+         if( r < rt ){
+            rho = rhoIn;
+         } else {
+            rho = rhoOut;
+         }
+      } else if(readejecta) { // ----- read in profile -----
+         rho = densRead;
+      } else { // ------ sunny gaussian -------
          rho = rhoSunny;
          v = vr;
          X = 1.0;
-      } else {
-         rho = rhoISM;
-         v = 0.0;
-         X = 0.0;
       }
    }
    

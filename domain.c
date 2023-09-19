@@ -1,5 +1,7 @@
 
 #include "paul.h"
+#include <stdbool.h>
+#include <stdio.h>
 
 double get_moment_arm( double , double );
 double get_dV( double , double );
@@ -37,7 +39,7 @@ void setupDomain( struct domain * theDomain ){
  
 }
 
-void initial( double * , double ); 
+void initial( double * , double , double ); 
 void prim2cons( double * , double * , double , double );
 void cons2prim( double * , double * , double , double );
 void restart( struct domain * ); 
@@ -54,6 +56,23 @@ void setupCells( struct domain * theDomain ){
    struct cell * theCells = theDomain->theCells;
    int Nr = theDomain->Nr;
 
+   
+   // read in density profile
+   bool readEjecta = true;
+   int startDay = 50;
+   int numToRead = 10;
+   double densIn[numToRead];
+   FILE *infile;
+   if (readEjecta) {
+      char filename[256];
+      sprintf(filename,"kundu_day%i",startDay);
+      infile = fopen(filename,"r");
+      for( i=0 ; i<numToRead ; ++i ){
+         fscanf(infile,"%lf",&densIn[i]);
+      }
+      printf("reading %s\n", filename);
+   }
+
    for( i=0 ; i<Nr ; ++i ){
       struct cell * c = &(theCells[i]);
       double rp = c->riph;
@@ -61,10 +80,12 @@ void setupCells( struct domain * theDomain ){
       c->wiph = 0.0; 
       double r = get_moment_arm( rp , rm );
       double dV = get_dV( rp , rm );
-      initial( c->prim , r ); 
+      initial( c->prim , r , densIn[i] ); 
       prim2cons( c->prim , c->cons , 0.0 , dV );
       cons2prim( c->cons , c->prim , 0.0 , dV );
    }
+
+   if(readEjecta) fclose(infile);
 
    int gE = theDomain->theParList.grav_e_mode;
    if( gE ){
