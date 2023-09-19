@@ -56,21 +56,21 @@ void setupCells( struct domain * theDomain ){
    struct cell * theCells = theDomain->theCells;
    int Nr = theDomain->Nr;
 
-   
    // read in density profile
    bool readEjecta = true;
    int startDay = 50;
-   int numToRead = 10;
+   int numToRead = 533;
    double densIn[numToRead];
    FILE *infile;
    if (readEjecta) {
       char filename[256];
-      sprintf(filename,"kundu_day%i",startDay);
+      sprintf(filename,"kundu_day%i.txt",startDay);
       infile = fopen(filename,"r");
+      printf("opened %s\n", filename);
       for( i=0 ; i<numToRead ; ++i ){
          fscanf(infile,"%lf",&densIn[i]);
+         printf("read density %5.3e\n",densIn[i]);
       }
-      printf("reading %s\n", filename);
    }
 
    for( i=0 ; i<Nr ; ++i ){
@@ -80,7 +80,11 @@ void setupCells( struct domain * theDomain ){
       c->wiph = 0.0; 
       double r = get_moment_arm( rp , rm );
       double dV = get_dV( rp , rm );
-      initial( c->prim , r , densIn[i] ); 
+      if(readEjecta && i<numToRead) {
+         initial( c->prim , r , densIn[i] ); 
+      } else {
+         initial( c->prim , r , 0.0 );
+      }
       prim2cons( c->prim , c->cons , 0.0 , dV );
       cons2prim( c->cons , c->prim , 0.0 , dV );
    }
