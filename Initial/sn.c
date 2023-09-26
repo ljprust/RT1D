@@ -16,9 +16,12 @@ void initial( double * prim , double r , double densRead ){
    double yr = 365.25*24.0*3600.0; // sec
    double day = 24.0*3600.0;
    bool wind, powerlaw, readejecta;
+   double Rgas = 8.314e7; // cgs
+   double molarMass = 0.6504; // 63% H, 37% He
+   double constTemp = 100.0; // K
 
    wind = true;
-   powerlaw = true;
+   powerlaw = false;
    readejecta = true;
 
    Eej    = 1.31e51; // 1.0e51;
@@ -70,6 +73,7 @@ void initial( double * prim , double r , double densRead ){
    }
    
    P = 1.0e-5*rho*vmax*vmax;
+   //P = 1.0e4*Rgas/molarMass*constTemp*rho;
  
    prim[RHO] = rho;
    prim[PPP] = P;
