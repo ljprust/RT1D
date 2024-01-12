@@ -12,18 +12,19 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    double v0, r0, vr, rhoSunny;
    double npower, deltapower, K, vt, rt;
    double rhoprefactor, rhoOut, rhoIn, Mdot, vwind;
+   double fh, mpower, thetah, thetap, kasenA, theta, kasenFactor;
    double Msun = 2.0e33;
    double yr = 365.25*24.0*3600.0; // sec
    double day = 24.0*3600.0;
-   bool wind, powerlaw, readrho, readvr;
+   bool wind, powerlaw, readrho, readvr, kasen;
    double Rgas = 8.314e7; // cgs
    double molarMass = 0.6504; // 63% H, 37% He
    double constTemp = 100.0; // K
 
-   wind = true;
+   wind     = true;
    powerlaw = true;
-   readrho = false;
-   readvr = false;
+   readrho  = false;
+   readvr   = false;
 
    Eej    = 1.0e51; // 1.31e51;
    Mej    = 2.5*Msun;
@@ -32,6 +33,14 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    vwind  = 10.0e5;
    Mdot   = 4.0e-6*Msun/yr;
    rhoISM = 5.0e-25; // 1.6e-24;
+
+   // Kasen fit parameters
+   kasen  = true;
+   fh     = 0.1;
+   mpower = 8.0;
+   thetah = 30.0;
+   thetap = 15.0;
+   kasenA = 1.8;
 
    v0 = sqrt(4.0/3.0*Eej/Mej);
    r0 = vmax*t0;
@@ -46,6 +55,9 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    rhoprefactor = K*Mej/rt/rt/rt;
    rhoOut = rhoprefactor*pow(r/rt,-npower);
    rhoIn  = rhoprefactor*pow(r/rt,-deltapower);
+
+   theta = acos(x/r)*180.0/3.14159;
+   kasenFactor = fh+(1.0-fh)*pow(theta/thetah,mpower)/(1.0+pow(theta/thetah,mpower)) * (1.0+kasenA*exp(-pow(theta/thetah-1.0,2.0)/pow(thetap/thetah,2.0)));
 
    if (wind) {
       rhoISM = Mdot/4.0/3.14159/r/r/vwind;
@@ -75,6 +87,9 @@ void initial( double * prim , double r , double densRead, double vrRead ){
       } else { // ------ sunny gaussian -------
          rho = rhoSunny;
          v = vr;
+      }
+      if( kasen ) {
+         rho *= kasenFactor;
       }
    }
    
