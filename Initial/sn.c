@@ -32,7 +32,7 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    vmax   = 1.72e9; // 2.5926e9;
    vwind  = 10.0e5;
    Mdot   = 4.0e-6*Msun/yr;
-   rhoISM = 5.0e-25; // 1.6e-24;
+   rhoISM = 5.0e-25; // 1.7e-24;
 
    // Kasen fit parameters
    kasen  = true;
@@ -41,6 +41,7 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    thetah = 30.0;
    thetap = 15.0;
    kasenA = 1.8;
+   theta  = 36.7567567568;
 
    v0 = sqrt(4.0/3.0*Eej/Mej);
    r0 = vmax*t0;
@@ -56,7 +57,6 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    rhoOut = rhoprefactor*pow(r/rt,-npower);
    rhoIn  = rhoprefactor*pow(r/rt,-deltapower);
 
-   theta = acos(x/r)*180.0/3.14159;
    kasenFactor = fh+(1.0-fh)*pow(theta/thetah,mpower)/(1.0+pow(theta/thetah,mpower)) * (1.0+kasenA*exp(-pow(theta/thetah-1.0,2.0)/pow(thetap/thetah,2.0)));
 
    if (wind) {
