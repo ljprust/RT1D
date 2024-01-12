@@ -5,7 +5,7 @@
 void setICparams( struct domain * theDomain ){
 }
 
-void initial( double * prim , double r , double densRead ){
+void initial( double * prim , double r , double densRead, double vrRead ){
 
    double rho, P, v, X;
    double Eej, Mej, t0, vmax, rhoISM;
@@ -15,21 +15,22 @@ void initial( double * prim , double r , double densRead ){
    double Msun = 2.0e33;
    double yr = 365.25*24.0*3600.0; // sec
    double day = 24.0*3600.0;
-   bool wind, powerlaw, readejecta;
+   bool wind, powerlaw, readrho, readvr;
    double Rgas = 8.314e7; // cgs
    double molarMass = 0.6504; // 63% H, 37% He
    double constTemp = 100.0; // K
 
    wind = true;
-   powerlaw = false;
-   readejecta = true;
+   powerlaw = true;
+   readrho = false;
+   readvr = false;
 
-   Eej    = 1.31e51; // 1.0e51;
-   Mej    = 2.25*Msun;
+   Eej    = 1.0e51; // 1.31e51;
+   Mej    = 2.5*Msun;
    t0     = 50.0*day;
-   vmax   = 2.5926e9; // 1.72e9;
+   vmax   = 1.72e9; // 2.5926e9;
    vwind  = 10.0e5;
-   Mdot   = 4.0e-5*Msun/yr;
+   Mdot   = 4.0e-6*Msun/yr;
    rhoISM = 5.0e-25; // 1.6e-24;
 
    v0 = sqrt(4.0/3.0*Eej/Mej);
@@ -60,15 +61,20 @@ void initial( double * prim , double r , double densRead ){
       if(powerlaw){ // ----- tony broken power law -----
          if( r < rt ){
             rho = rhoIn;
+            v = vr;
          } else {
             rho = rhoOut;
+            v = vr;
          }
-      } else if(readejecta) { // ----- read in profile -----
+      } else if(readvr) { // ----- read in density & velocity profile -----
          rho = densRead;
+         v = vrRead;
+      } else if(readrho) { // ---- read in only density profile -----------
+         rho = densRead;
+         v = vr;
       } else { // ------ sunny gaussian -------
          rho = rhoSunny;
          v = vr;
-         X = 1.0;
       }
    }
    
