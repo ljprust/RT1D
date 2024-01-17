@@ -21,27 +21,27 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    double molarMass = 0.6504; // 63% H, 37% He
    double constTemp = 100.0; // K
 
-   wind     = true;
-   powerlaw = true;
-   readrho  = false;
-   readvr   = false;
+   wind     = false;
+   powerlaw = false;
+   readrho  = densRead > 0.0;
+   readvr   = vrRead > 0.0;
+   kasen    = false;
 
-   Eej    = 1.0e51; // 1.31e51;
-   Mej    = 2.5*Msun;
-   t0     = 50.0*day;
-   vmax   = 1.72e9; // 2.5926e9;
+   Eej    = 0.97e51; // 1.0e51; // 1.31e51;
+   Mej    = 1.789623e33; // 2.5*Msun;
+   t0     = 1.0*day; // 50.0*day;
+   vmax   = 2.53e9; // 1.72e9; // 2.5926e9;
    vwind  = 10.0e5;
    Mdot   = 4.0e-6*Msun/yr;
-   rhoISM = 5.0e-25; // 1.7e-24;
+   rhoISM = 1.0e-20; // 5.0e-25; // 1.7e-24;
 
    // Kasen fit parameters
-   kasen  = true;
    fh     = 0.1;
    mpower = 8.0;
    thetah = 30.0;
    thetap = 15.0;
    kasenA = 1.8;
-   theta  = 36.7567567568;
+   theta  = 90.0; // 36.7567567568;
 
    v0 = sqrt(4.0/3.0*Eej/Mej);
    r0 = vmax*t0;
@@ -63,7 +63,15 @@ void initial( double * prim , double r , double densRead, double vrRead ){
       rhoISM = Mdot/4.0/3.14159/r/r/vwind;
    }
 
-   if(r > r0) { // ----- ISM ----------
+   if (readvr) { // read in density & velocity profile
+      rho = densRead;
+      v   = vrRead;
+      X   = 1.0;
+   } else if(readrho) { // read in only density profile
+      rho = densRead;
+      v   = vr;
+      X   = 1.0;
+   } else if(r > r0) { // ----- ISM ----------
       rho = rhoISM;
       v = 0.0;
       X = 0.0;
@@ -73,20 +81,11 @@ void initial( double * prim , double r , double densRead, double vrRead ){
       if(powerlaw){ // ----- tony broken power law -----
          if( r < rt ){
             rho = rhoIn;
-            v = vr;
          } else {
             rho = rhoOut;
-            v = vr;
          }
-      } else if(readvr) { // ----- read in density & velocity profile -----
-         rho = densRead;
-         v = vrRead;
-      } else if(readrho) { // ---- read in only density profile -----------
-         rho = densRead;
-         v = vr;
       } else { // ------ sunny gaussian -------
          rho = rhoSunny;
-         v = vr;
       }
       if( kasen ) {
          rho *= kasenFactor;

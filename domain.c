@@ -57,10 +57,10 @@ void setupCells( struct domain * theDomain ){
    int Nr = theDomain->Nr;
 
    // read in density profile
-   bool readRho = false;
-   bool readVr = false;
-   int startDay = 50;
-   int numToRead = 896;
+   bool readRho = true;
+   bool readVr =  true;
+   int startDay = 100;
+   int numToRead = 801;
    double densIn[numToRead];
    double vrIn[numToRead];
    FILE *infile_rho;
@@ -68,7 +68,7 @@ void setupCells( struct domain * theDomain ){
    if (readRho) {
       char filename_rho[256];
       //sprintf(filename,"kundu_day%i.txt",startDay);
-      sprintf(filename_rho,"sprout_rho%i.txt",startDay);
+      sprintf(filename_rho,"rt1d_rho90.txt");
       infile_rho = fopen(filename_rho,"r");
       printf("opened %s\n", filename_rho);
       for( i=0 ; i<numToRead ; ++i ){
@@ -79,7 +79,7 @@ void setupCells( struct domain * theDomain ){
    if (readVr) {
       char filename_vr[256];
       //sprintf(filename,"kundu_day%i.txt",startDay);
-      sprintf(filename_vr,"sprout_vr%i.txt",startDay);
+      sprintf(filename_vr,"rt1d_vr90.txt");
       infile_vr = fopen(filename_vr,"r");
       printf("opened %s\n", filename_vr);
       for( i=0 ; i<numToRead ; ++i ){
