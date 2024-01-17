@@ -16,20 +16,20 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    double Msun = 2.0e33;
    double yr = 365.25*24.0*3600.0; // sec
    double day = 24.0*3600.0;
-   bool wind, powerlaw, readrho, readvr, kasen;
+   bool wind, powerlaw, readrho, readvr, kasen, ejecta;
    double Rgas = 8.314e7; // cgs
    double molarMass = 0.6504; // 63% H, 37% He
    double constTemp = 100.0; // K
 
    wind     = false;
    powerlaw = false;
-   readrho  = densRead > 0.0;
-   readvr   = vrRead > 0.0;
+   readrho  = true;
+   readvr   = true;
    kasen    = false;
 
    Eej    = 0.97e51; // 1.0e51; // 1.31e51;
    Mej    = 1.789623e33; // 2.5*Msun;
-   t0     = 1.0*day; // 50.0*day;
+   t0     = 100.0*day; // 50.0*day;
    vmax   = 2.53e9; // 1.72e9; // 2.5926e9;
    vwind  = 10.0e5;
    Mdot   = 4.0e-6*Msun/yr;
@@ -63,33 +63,47 @@ void initial( double * prim , double r , double densRead, double vrRead ){
       rhoISM = Mdot/4.0/3.14159/r/r/vwind;
    }
 
-   if (readvr) { // read in density & velocity profile
-      rho = densRead;
-      v   = vrRead;
-      X   = 1.0;
-   } else if(readrho) { // read in only density profile
-      rho = densRead;
-      v   = vr;
-      X   = 1.0;
-   } else if(r > r0) { // ----- ISM ----------
-      rho = rhoISM;
-      v = 0.0;
-      X = 0.0;
-   } else { // -------- ejecta --------
+   if (readrho) {
+      if (densRead > 0.0 && r < 1.5*r0) {
+         ejecta = true;
+      } else {
+         ejecta = false;
+      }
+   } else if (r < r0) {
+      ejecta = true;
+   } else {
+      ejecta = false;
+   }
+
+   if (ejecta) {
       X = 1.0;
-      v = vr;
-      if(powerlaw){ // ----- tony broken power law -----
+      if (vrRead>0.0) { // read in density & velocity profile
+         rho = densRead;
+         v   = vrRead;
+         X   = 1.0;
+      } else if(densRead>0.0) { // read in only density profile
+         rho = densRead;
+         v   = vr;
+         X   = 1.0;
+      } else if(powerlaw) { // ----- tony broken power law -----
          if( r < rt ){
             rho = rhoIn;
+            v = vr;
          } else {
             rho = rhoOut;
+            v = vr;
          }
       } else { // ------ sunny gaussian -------
          rho = rhoSunny;
+         v = vr;
       }
       if( kasen ) {
          rho *= kasenFactor;
       }
+   } else {
+      rho = rhoISM;
+      v = 0.0;
+      X = 0.0;
    }
    
    P = 1.0e-5*rho*vmax*vmax;
