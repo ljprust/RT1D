@@ -306,7 +306,7 @@ void AMR( struct domain * theDomain ){
    int gE = theDomain->theParList.grav_e_mode;
 
    if( S>MaxShort && rank == rS ){
-      printf("Rank %d; Short = %e #%d of %d\n",rank,S,iS,Nr);
+      //printf("Rank %d; Short = %e #%d of %d\n",rank,S,iS,Nr);
       //printf("KILL! rank = %d\n",rank);
 
       int iSp = iS+1;
@@ -359,7 +359,7 @@ void AMR( struct domain * theDomain ){
 
    if( L>MaxLong && rank==rL ){
 
-      printf("Rank %d; Long  = %e #%d of %d\n",rank,L,iL,Nr);
+      //printf("Rank %d; Long  = %e #%d of %d\n",rank,L,iL,Nr);
       //printf("FORGE! rank = %d\n",rank);
       theDomain->Nr += 1;
       Nr = theDomain->Nr;
