@@ -6,7 +6,7 @@ OUTPUT   = ascii
 UNAME = $(shell uname)
 ifeq ($(UNAME),Linux)
 #H55 = /home/install/app/hdf5
-H55 = /home/uwm/ljprust/Data/ljprust/hdf5-1.12.2/hdf5
+H55 = /home/logan/hdf5-1.14.1-2/hdf5
 endif
 ifeq ($(UNAME),Darwin)
 H55 = /opt/local
@@ -38,7 +38,7 @@ $(OUTPUT).o : Output/$(OUTPUT).c paul.h
 	$(CC) $(FLAGS) $(INC) -c Output/$(OUTPUT).c
 
 rt1d: $(OBJ) paul.h
-	$(CC) $(FLAGS) $(LIB) -o rt1d $(OBJ)
+	$(CC) $(FLAGS) $(LIB) -o kasencalib/rt1d $(OBJ)
 
 clean:
 	rm -f *.o rt1d

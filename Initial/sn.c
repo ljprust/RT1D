@@ -21,16 +21,16 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    double molarMass = 0.6504; // 63% H, 37% He
    double constTemp = 100.0; // K
 
-   wind     = true;
-   powerlaw = true;
+   wind     = false;
+   powerlaw = false;
    readrho  = false;
    readvr   = false;
    kasen    = false;
 
-   Eej    = 1.0e51; // 0.97e51; // 1.31e51;
-   Mej    = 2.5*Msun; // 1.789623e33;
-   t0     = 1.0*day; // 26.614*yr;
-   vmax   = 1.72e9; // 2.53e9;
+   Eej    = 0.97e51; // 1.0e51;
+   Mej    = 1.789623e33; // 2.5*Msun
+   t0     = 10.0*yr; // 15.544*yr; // 26.614*yr;
+   vmax   = 2.53e9; // 1.72e9;
    vwind  = 10.0e5;
    Mdot   = 4.0e-5*Msun/yr;
    rhoISM = 6.31e-25; // 5.0e-25; // 1.7e-24;
@@ -41,7 +41,7 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    thetah = 30.0;
    thetap = 15.0;
    kasenA = 1.8;
-   theta  = 90.0; // 36.7567567568;
+   theta  = 0.0; // 36.7567567568;
 
    v0 = sqrt(4.0/3.0*Eej/Mej);
    r0 = vmax*t0;

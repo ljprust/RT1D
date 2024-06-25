@@ -1,19 +1,27 @@
 // parameters for sn ejecta
 
 //Time Range//
-T_Start			3.15576e8  // 10 yr
-T_End			1.57788e10 // 500 yr
+T_Start			0.0
+T_End			2.58336e8 // 2990 days
+// 2.5704e8 // 2975 days
+// 2.5056e8 // 2900 days
+// 2.5488e8 // 2950 days
+// 1.727136e8 // 1999 days
+// 1.71936e8 // 1990 days
+// 1.6848e8 // 1950 days
+// 1.1664e8 // 1350 days
+// 1 yr = 3.15576e7 sec
 
 //Output Frequency//
-Num_Reports		10
+Num_Reports		2000
 Num_Snapshots		10
-Num_Checkpoints		100
+Num_Checkpoints		200
 Use_Logtime		0
 
 //Grid Dimensions//
-Num_R			4000
+Num_R			40000
 R_Min			0.0
-R_Max			1.54284e19 // 5 pc
+R_Max			3.0e17 // 2.1e17
 Log_Zoning		0	//0=Uniform, 1=Log, 2=Hybrid
 Log_Radius		3.0	//Only for option 2 of Log_Zoning
 
@@ -25,12 +33,12 @@ CFL			0.2
 PLM			1.0
 Riemann_Solver		1	//0=HLL, 1=HLLC
 Mesh_Motion		1	//0=Fixed, 1=By Cell, 2=Riemann Solver
-Density_Floor		0.0 // 1.0e-26
-Pressure_Floor		0.0 // 1.0e-12
+Density_Floor		0.0 // 1.0e-26 // 1.0e-15
+Pressure_Floor		0.0 // 1.0e-12 // 1.0e-5
 Absorb_Inner		0
 
 //Hydro Parameters
-Adiabatic_Index		1.666667 //1.33333333333 //1.666666666667
+Adiabatic_Index		1.666666667 //1.33333333333 //1.666666666667
 
 //Gravity Parameters
 Gravity_Switch		0
@@ -44,10 +52,10 @@ Gravity_Balanced	1
 Use_RT			1
 Measure_Growth		0
 
-RT_A			1.176e-5
-RT_B			1.2
-RT_C			0.102
-RT_D			0.0
+RT_A			1.0e-3
+RT_B			2.5
+RT_C			0.2
+RT_D			2.0
 
 //Paper 1: A = 1.176e-5, B = 1.2, C = 0.102, D = 0.0
 //Paper 2: A = 1e-3, 	 B = 2.5, C = 0.2,   D = 2.0
