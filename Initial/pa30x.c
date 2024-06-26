@@ -9,7 +9,7 @@ void initial( double * prim , double r , double densRead, double vrRead ){
 
    double rho, P, v, X;
    double Eej, Mej, t0, rhoISM;
-   double r0, vr, vmax;
+   double vr, vmax;
    double npower, delta;
    double Mdot, vwind, rhoWind;
    double muISM, nISM, amu, A_Chevalier, rsh, Pratio;
@@ -18,20 +18,23 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    double Msun = 2.0e33;
    double yr = 365.25*24.0*3600.0; // sec
    double day = 24.0*3600.0;
+   bool sunny;
+   double prefactor, rhoSunny, v0sq, r0;
 
-   Eej         = 1.0e48;
-   Mej         = 0.35*Msun;
+   Eej         = 1.0e49; // 0.131e51; // 1.0e48;
+   Mej         = 0.35*Msun; // 0.353*Msun; // 0.18*Msun;
    t0          = 10.0*yr;
    vwind       = 1.5e9;
    Mdot        = 1.0e-6*Msun/yr;
    npower      = 6.0;
    delta       = 1.5;
    muISM       = 0.615;
-   nISM        = 0.1;
+   nISM        = 0.1; // 1.0;
    amu         = 1.66e-24; // g
    A_Chevalier = 2.4;
-   rsh         = -1.0 // outer radius of wind
+   rsh         = -1.0; // outer radius of wind
    Pratio      = 1.0e-5;
+   sunny       = true;
 
    rhoISM = muISM*amu*nISM;
    rhoWind = Mdot/4.0/3.14159/r/r/vwind;
@@ -52,25 +55,45 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    rho_br_in  = rho_br * pow( r/rbr, -delta  );
    rho_br_out = rho_br * pow( r/rbr, -npower );
 
-   if (r > Rc) { // ISM
-     X = 0.0;
-     v = 0.0;
-     rho = rhoISM;
-   } else if (r > rbr) { // n power law
-     X = 1.0;
-     v = vr;
-     rho = rho_br_out;
-   } else if (r > rsh) { // delta power law
-     X = 1.0;
-     v = vr;
-     rho = rho_br_in;
-   } else { // wind
-     X = 1.0;
-     v = vr;
-     rho = rhoWind;
+   /////// GAUSSIAN STUFF //////////
+
+   prefactor = pow(3.0/4.0/3.14159, 1.5) * pow(Mej, 2.5)/pow(Eej, 1.5);
+   v0sq = 4.0/3.0*Eej/Mej;
+   vmax = sqrt( -1.0*log(rhoISM/prefactor*t0*t0*t0)*v0sq );
+   r0 = vmax*t0;
+   rhoSunny = prefactor /t0/t0/t0 * exp(-vr*vr/v0sq);
+
+   if (sunny) {
+      if (r > r0) { // ISM
+         X = 0.0;
+         v = 0.0;
+         rho = rhoISM;
+      } else { // gaussian
+         X = 1.0;
+         v = vr;
+         rho = rhoSunny;
+      }
+   } else {
+      if (r > Rc) { // ISM
+         X = 0.0;
+         v = 0.0;
+         rho = rhoISM;
+      } else if (r > rbr) { // n power law
+         X = 1.0;
+         v = vr;
+         rho = rho_br_out;
+      } else if (r > rsh) { // delta power law
+         X = 1.0;
+         v = vr;
+         rho = rho_br_in;
+      } else { // wind
+         X = 1.0;
+         v = vr;
+         rho = rhoWind;
+      }
    }
 
-   vmax = Rc/t0;
+   if (!sunny) vmax = Rc/t0;
    P = Pratio*rho*vmax*vmax;
 
    prim[RHO] = rho;
