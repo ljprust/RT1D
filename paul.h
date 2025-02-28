@@ -34,6 +34,9 @@ struct param_list{
    double Density_Floor, Pressure_Floor;
    double Adiabatic_Index;
 
+   double t_initial, E_ejecta, M_ejecta, v_max, Mdot_wind, v_wind, rho_ISM;
+   int Use_PowerLaw, Use_Wind;
+
    double rt_A,rt_B,rt_C,rt_D;
 
 };
