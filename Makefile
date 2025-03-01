@@ -2,6 +2,7 @@
 INITIAL  = sn
 HYDRO    = euler
 OUTPUT   = ascii
+RIEMANN  = riemann
 
 UNAME = $(shell uname)
 ifeq ($(UNAME),Linux)
@@ -18,7 +19,7 @@ FLAGS = -O3 -Wall -g
 INC = -I$(H55)/include
 LIB = -L$(H55)/lib -lm -lhdf5
 
-OBJ = main.o mpisetup.o profiler.o report.o readpar.o domain.o gridsetup.o geometry.o exchange.o misc.o timestep.o onestep.o riemann.o boundary.o gravity.o nozzle.o plm.o $(INITIAL).o $(OUTPUT).o $(HYDRO).o #report.o
+OBJ = main.o mpisetup.o profiler.o report.o readpar.o domain.o gridsetup.o geometry.o exchange.o misc.o timestep.o onestep.o boundary.o gravity.o nozzle.o plm.o $(INITIAL).o $(OUTPUT).o $(HYDRO).o $(RIEMANN).o #report.o
 
 default: rt1d
 
@@ -38,7 +39,7 @@ $(OUTPUT).o : Output/$(OUTPUT).c paul.h
 	$(CC) $(FLAGS) $(INC) -c Output/$(OUTPUT).c
 
 rt1d: $(OBJ) paul.h
-	$(CC) $(FLAGS) $(LIB) -o kasencalib/rt1d $(OBJ)
+	$(CC) $(FLAGS) $(LIB) -o rt1d $(OBJ)
 
 clean:
 	rm -f *.o rt1d
