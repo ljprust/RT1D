@@ -151,6 +151,16 @@ void riemann( struct cell * cL , struct cell * cR, double r , double dAdt ){
       Flux[TAU] += -G*m/r*Flux[RHO];
    }
 
+   double fluxCorrection[NUM_Q];
+   fluxCorrection[RHO] = 0.0;
+   fluxCorrection[VRR] = -fluxFace[RHO]*w;
+   fluxCorrection[PPP] = -fluxFace[VRR]*w - w*w*fluxFace[RHO]/2.0;
+   fluxCorrection[XXX] = 0.0;
+
+   for( q=0 ; q<NUM_Q ; ++q ){
+      Flux[q] = fluxFace[q] - fluxCorrection[q];
+   }
+
    if( rt_flag ){
       double prim[NUM_Q];
       double consL[NUM_Q];
@@ -160,7 +170,7 @@ void riemann( struct cell * cL , struct cell * cR, double r , double dAdt ){
       double gprim[NUM_Q];
       double gcons[NUM_Q];
       for( q=0 ; q<NUM_Q ; ++q ){
-         prim[q] = .5*(primL[q]+primR[q]);
+         prim[q]  = 0.5*(primL[q]+primR[q]);
          gprim[q] = (cR->prim[q] - cL->prim[q])/(drL+drR);
          gcons[q] = (consR[q] - consL[q])/(drL+drR);
       }
@@ -178,16 +188,6 @@ void riemann( struct cell * cL , struct cell * cR, double r , double dAdt ){
       for( q=0 ; q<NUM_Q ; ++q ){
          Flux[q] += -eta*gcons[q];
       }
-   }
-
-   double fluxCorrection[NUM_Q];
-   fluxCorrection[RHO] = 0.0;
-   fluxCorrection[VRR] = -fluxFace[RHO]*w;
-   fluxCorrection[PPP] = -fluxFace[VRR]*w - w*w*fluxFace[RHO]/2.0;
-   fluxCorrection[XXX] = 0.0;
-
-   for( q=0 ; q<NUM_Q ; ++q ){
-      Flux[q] = fluxFace[q] - fluxCorrection[q];
    }
 
    for( q=0 ; q<NUM_Q ; ++q ){
