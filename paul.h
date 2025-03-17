@@ -1,4 +1,4 @@
-enum{RHO,PPP,VRR,XXX,AAA};
+enum{RHO,PPP,VRR,XXX,YYY,ZZZ,AAA};
 enum{DDD,TAU,SRR};
 
 #include <mpi.h>
@@ -8,7 +8,7 @@ enum{DDD,TAU,SRR};
 #include <string.h>
 #include <time.h>
 
-#define NUM_Q 5
+#define NUM_Q 7
 #define NUM_G 2
 
 struct param_list{
