@@ -39,7 +39,7 @@ void setupDomain( struct domain * theDomain ){
  
 }
 
-void initial( double * , double , double , double ); 
+void initial( double * , double , int ); 
 void prim2cons( double * , double * , double , double );
 void cons2prim( double * , double * , double , double );
 void restart( struct domain * ); 
@@ -56,38 +56,6 @@ void setupCells( struct domain * theDomain ){
    struct cell * theCells = theDomain->theCells;
    int Nr = theDomain->Nr;
 
-   // read in density profile
-   bool readRho = false;
-   bool readVr =  false;
-   int startDay = 100;
-   int numToRead = 1752;
-   double densIn[numToRead];
-   double vrIn[numToRead];
-   FILE *infile_rho;
-   FILE *infile_vr;
-   if (readRho) {
-      char filename_rho[256];
-      //sprintf(filename,"kundu_day%i.txt",startDay);
-      sprintf(filename_rho,"midscaled_rho.txt");
-      infile_rho = fopen(filename_rho,"r");
-      printf("opened %s\n", filename_rho);
-      for( i=0 ; i<numToRead ; ++i ){
-         fscanf(infile_rho,"%lf",&densIn[i]);
-         printf("read density %5.3e\n",densIn[i]);
-      }
-   }
-   if (readVr) {
-      char filename_vr[256];
-      //sprintf(filename,"kundu_day%i.txt",startDay);
-      sprintf(filename_vr,"midscaled_vr.txt");
-      infile_vr = fopen(filename_vr,"r");
-      printf("opened %s\n", filename_vr);
-      for( i=0 ; i<numToRead ; ++i ){
-         fscanf(infile_vr,"%lf",&vrIn[i]);
-         printf("read velocity %5.3e\n",vrIn[i]);
-      }
-   }
-
    for( i=0 ; i<Nr ; ++i ){
       struct cell * c = &(theCells[i]);
       double rp = c->riph;
@@ -95,19 +63,11 @@ void setupCells( struct domain * theDomain ){
       c->wiph = 0.0; 
       double r = get_moment_arm( rp , rm );
       double dV = get_dV( rp , rm );
-      if(readVr && i<numToRead) {
-         initial( c->prim , r , densIn[i], vrIn[i] ); 
-      } else if(readRho && i<numToRead) {
-         initial( c->prim , r , densIn[i], 0.0 );
-      } else {
-         initial( c->prim , r , 0.0 , 0.0 );
-      }
+      int debug = 1;
+      initial( c->prim , r , debug );
       prim2cons( c->prim , c->cons , 0.0 , dV );
       cons2prim( c->cons , c->prim , 0.0 , dV );
    }
-
-   if(readRho) fclose(infile_rho);
-   if(readVr)  fclose(infile_vr);
 
    int gE = theDomain->theParList.grav_e_mode;
    if( gE ){
