@@ -1,7 +1,7 @@
 
 #include "../paul.h"
 
-static double GAMMA_LAW = 0.0;
+//static double GAMMA_LAW = 0.0;
 static double RHO_FLOOR = 0.0;
 static double PRE_FLOOR = 0.0;
 static double grav_G = 0.0;
@@ -14,6 +14,11 @@ static double ar = 0.0;
 static double mu = 0.0;
 static double mProton = 0.0;
 static double kB = 0.0;
+
+double pressureEq(double temp, double rho);
+double energyEq(double temp, double rho);
+double calcGamma(double rho, double pres);
+double TempFromBeta3Gamma4(double beta3, double gamma4);
 
 void setHydroParams( struct domain * theDomain ){
    //GAMMA_LAW = theDomain->theParList.Adiabatic_Index;
@@ -47,8 +52,8 @@ double energyEq(double temp, double rho) {
 double calcGamma(double rho, double pres) {
   double gasPres, beta;
 
-  double beta3 = 3.0*rho*kB/mu/mProton/a;
-  double gamma4 = 3.0*pres/a;
+  double beta3 = 3.0*rho*kB/mu/mProton/ar;
+  double gamma4 = 3.0*pres/ar;
   double temp = TempFromBeta3Gamma4(beta3, gamma4);
 
   gasPres = rho*kB*temp/(mu*mProton);
@@ -139,7 +144,7 @@ void cons2prim( double * cons , double * prim , double GMr , double dV ){
 
 }
 
-void get_cs( double rho , double P ) {
+double get_cs( double rho , double P ) {
    double gamma1 = calcGamma(rho,P);
    return sqrt(gamma1*P/rho);
 }

@@ -1,7 +1,7 @@
 
 #include "../paul.h"
 
-static double GAMMA_LAW = 0.0;
+//static double GAMMA_LAW = 0.0;
 static double RHO_FLOOR = 0.0;
 static double PRE_FLOOR = 0.0;
 static double grav_G = 0.0;
@@ -14,6 +14,13 @@ static double ar = 0.0;
 static double mu = 0.0;
 static double mProton = 0.0;
 static double kB = 0.0;
+
+double pressureEq(double temp, double rho);
+double energyEq(double temp, double rho);
+double findRootCubic(double A, double B);
+double calcTemperaturePressure(double rho, double pres);
+double calcTemperatureEnergy(double rho, double energy);
+double calcGamma(double rho, double pres);
 
 void setHydroParams( struct domain * theDomain ){
    //GAMMA_LAW = theDomain->theParList.Adiabatic_Index;
@@ -52,8 +59,8 @@ double findRootCubic(double A, double B) {
 }
 
 //takes in pressure and density and solves the quartic analytically to get you temperature
-Real calcTemperaturePressure(Real rho, Real pres) {
-  Real A, B, temp, y;
+double calcTemperaturePressure(double rho, double pres) {
+  double A, B, temp, y;
 
   A = 3.0*kB*rho/(ar*mu*mProton);
   B = 3.0*pres/ar;
@@ -63,7 +70,7 @@ Real calcTemperaturePressure(Real rho, Real pres) {
 } 
 
 //takes in energy and density and solves the quartic analytically to get you temperature
-double calcTemperatureEnergy(Real rho, Real energy) {
+double calcTemperatureEnergy(double rho, double energy) {
   double A, B, temp, y;
 
   A = 3.0*kB*rho/(2.0*ar*mu*mProton);
@@ -74,7 +81,7 @@ double calcTemperatureEnergy(Real rho, Real energy) {
 }
 
 //takes in pressure and density and returns gamma
-double calcGamma(Real rho, Real pres) {
+double calcGamma(double rho, double pres) {
   double gasPres, beta, temp;
 
   temp = calcTemperaturePressure(rho, pres);
@@ -143,7 +150,7 @@ void cons2prim( double * cons , double * prim , double GMr , double dV ){
 
 }
 
-void get_cs( double rho , double P ) {
+double get_cs( double rho , double P ) {
    double gamma1 = calcGamma(rho,P);
    return sqrt(gamma1*P/rho);
 }
