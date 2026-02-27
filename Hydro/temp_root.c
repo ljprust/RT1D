@@ -65,6 +65,7 @@ double calcTemperaturePressure(double rho, double pres) {
   A = 3.0*kB*rho/(ar*mu*mProton);
   B = 3.0*pres/ar;
   y = findRootCubic(A,B);
+  if(isnan(y)>0) printf("NaN in calcTempPres\n");
   temp = pow(y,0.5)*(pow(2.0*A/pow(y*y*y,0.5)-1.0,0.5)-1.0)/2.0;
   return temp;       
 } 
@@ -76,6 +77,7 @@ double calcTemperatureEnergy(double rho, double energy) {
   A = 3.0*kB*rho/(2.0*ar*mu*mProton);
   B = energy/(ar);
   y = findRootCubic(A,B);
+  if(isnan(y)>0) printf("NaN in calcTempEner\n");
   temp = pow(y,0.5)*(pow(2.0*A/pow(y*y*y,0.5)-1.0,0.5)-1.0)/2.0;
   return temp;
 }

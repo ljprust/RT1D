@@ -52,12 +52,15 @@ double energyEq(double temp, double rho) {
 double calcGamma(double rho, double pres) {
   double gasPres, beta;
 
+  if( pres < 0.0 ) pres = PRE_FLOOR*rho;
+
   double beta3 = 3.0*rho*kB/mu/mProton/ar;
   double gamma4 = 3.0*pres/ar;
   double temp = TempFromBeta3Gamma4(beta3, gamma4);
 
   gasPres = rho*kB*temp/(mu*mProton);
   beta = gasPres/pres;
+  if( isnan(beta)>0 && isnan(rho)==0 && isnan(pres)==0 ) printf("NaN generated in calcGamma: rho %5.3e pres %5.3e gasPres %5.3e beta %5.3e\n",rho,pres,gasPres,beta);
   return (32.0-24.0*beta-3.0*beta*beta)/(24.0-21.0*beta);
 }
 
@@ -77,6 +80,7 @@ double TempFromBeta3Gamma4(double beta3, double gamma4) {
     temp = beta*( pow(delta,4.0) - pow(delta,16.0)
                 + 4.0*pow(delta,28.0) - 22.0*pow(delta,40.0) );
   }
+  if( isnan(temp)>0 && isnan(beta3)==0 && isnan(gamma4)==0 ) printf("NaN generated in TempFromBeta3Gamma4\n");
   return temp;
 }
 
@@ -95,10 +99,12 @@ void prim2cons( double * prim , double * cons , double GMr , double dV ){
    double gamma4 = 3.0*Pp/ar;
    double temp = TempFromBeta3Gamma4(beta3, gamma4);
    double rhoe = energyEq(temp, rho);
+   //if( isnan(rhoe)>0 ) rhoe = 1.5*PRE_FLOOR*rho;
+   if( isnan(rhoe)>0 && isnan(rho)==0 && isnan(Pp)==0 ) printf("NaN generated in prim2cons\n");
 
    //double rhoe = Pp/(gam-1.);
 
-   double egrav = -rho*GMr;
+   double egrav = 0.0; // -rho*GMr;
 
    cons[DDD] = rho*dV;
    cons[SRR] = rho*vr*dV;
@@ -116,7 +122,7 @@ void cons2prim( double * cons , double * prim , double GMr , double dV ){
    double Sr  = cons[SRR]/dV;
    double E   = cons[TAU]/dV;
 
-   double egrav = -rho*GMr;
+   double egrav = 0.0; // -rho*GMr;
 
    double vr = Sr/rho;
    double v2 = vr*vr;
@@ -127,6 +133,8 @@ void cons2prim( double * cons , double * prim , double GMr , double dV ){
    double gamma4 = rhoe/ar;
    double temp = TempFromBeta3Gamma4(beta3, gamma4);
    double Pp = pressureEq(temp, rho);
+   if( isnan(Pp)>0 ) Pp = PRE_FLOOR*rho;
+   if( isnan(Pp)>0 && isnan(rho)==0 & isnan(E)==0 ) printf("NaN generated in cons2prim: rho %5.3e E %5.3e rhoe %5.3e beta3 %5.3e gamma4 %5.3e temp %5.3e Sr %5.3e v2 %5.3e egrav %5.3e\n",rho,E,rhoe,beta3,gamma4,temp,Sr,v2,egrav);
 
    //double Pp = (gam-1.)*rhoe;
 
