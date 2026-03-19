@@ -75,7 +75,7 @@ void initial( double * prim , double r , double densRead, double vrRead ){
 
    if(isCEE) {
       rho = rho_CEE;
-      v = r*t0;
+      v = r/t0;
       X = 1.0;
    } else if(isInner) {
       rho = rho_wind_inner;
@@ -94,6 +94,8 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    P = pratio*0.5*rho*v*v;
    //P = 1.0e4*Rgas/molarMass*constTemp*rho;
  
+   printf("rho = %5.3e\n",rho);
+
    prim[RHO] = rho;
    prim[PPP] = P;
    prim[VRR] = v;
