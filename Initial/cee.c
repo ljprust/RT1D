@@ -17,6 +17,7 @@ static double Mdotinner  = 0.0;
 static double Mdotouter  = 0.0;
 static double rhoISM     = 0.0;
 static double t0         = 0.0;
+static double pratio     = 0.0;
 
 void setICparams( struct domain * theDomain ){
    Cfit       = theDomain->theParList.C_fit;
@@ -31,9 +32,11 @@ void setICparams( struct domain * theDomain ){
    Mdotinner  = theDomain->theParList.Mdot_inner;
    Mdotouter  = theDomain->theParList.Mdot_outer;
    vwindinner = theDomain->theParList.v_wind_inner;
-   vwindouter = theDomain->theParList.v_wind_outer;
+   //vwindouter = theDomain->theParList.v_wind_outer;
+   vwindouter = 1000.0*7.0e10/(3000.0*24.0*3600.0);
    rhoISM     = theDomain->theParList.rho_ISM;
    t0         = theDomain->theParList.T_Start;
+   pratio     = theDomain->theParList.Pressure_Ratio;
 }
 
 void initial( double * prim , double r , double densRead, double vrRead ){
@@ -81,7 +84,7 @@ void initial( double * prim , double r , double densRead, double vrRead ){
 
    if(isCEE) {
       rho = rhoCEE;
-      v = I don't know
+      v = r*t0;
       X = 1.0;
    } else if(isInner) {
       rho = rho_wind_inner;
@@ -97,7 +100,7 @@ void initial( double * prim , double r , double densRead, double vrRead ){
       X = 0.0;
    }
 
-   P = 1.0e-5*rho*vmax*vmax;
+   P = pratio*0.5*rho*vmax*vmax;
    //P = 1.0e4*Rgas/molarMass*constTemp*rho;
  
    prim[RHO] = rho;

@@ -81,7 +81,6 @@ int read_par_file( struct domain * theDomain ){
          err += readvar( pfile , "Use_Logtime"       , VAR_INT  , &(theList->Out_LogTime)     );
          err += readvar( pfile , "Max_Aspect_Short"  , VAR_DOUB , &(theList->MaxShort)        );
          err += readvar( pfile , "Max_Aspect_Long"   , VAR_DOUB , &(theList->MaxLong)         );
-         err += readvar( pfile , "RT_A"              , VAR_DOUB , &(theList->rt_A)            );
          err += readvar( pfile , "t_initial"         , VAR_DOUB , &(theList->t_initial)       );
          err += readvar( pfile , "E_ejecta"          , VAR_DOUB , &(theList->E_ejecta)        );
          err += readvar( pfile , "M_ejecta"          , VAR_DOUB , &(theList->M_ejecta)        );
@@ -105,6 +104,8 @@ int read_par_file( struct domain * theDomain ){
          err += readvar( pfile , "v_wind_inner"      , VAR_DOUB , &(theList->v_wind_inner)    );
          err += readvar( pfile , "v_wind_outer"      , VAR_DOUB , &(theList->v_wind_outer)    );
          err += readvar( pfile , "Wind_BC"           , VAR_INT  , &(theList->Wind_BC)         );
+         err += readvar( pfile , "Pressure_Ratio"    , VAR_DOUB , &(theList->Pressure_Ratio)  );
+         err += readvar( pfile , "RT_A"              , VAR_DOUB , &(theList->rt_A)            );
          err += readvar( pfile , "RT_B"              , VAR_DOUB , &(theList->rt_B)            );
          err += readvar( pfile , "RT_C"              , VAR_DOUB , &(theList->rt_C)            );
          err += readvar( pfile , "RT_D"              , VAR_DOUB , &(theList->rt_D)            );
