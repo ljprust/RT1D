@@ -38,6 +38,22 @@ void boundary( struct domain * theDomain ){
    }
 */
 
+   int WIND_R0 = theDomain->theParList.Wind_BC;
+   if( WIND_R0 && rank==0 ){
+      double Mdotinner  = theDomain->theParList.Mdot_inner;
+      double vwindinner = theDomain->theParList.v_wind_inner;
+      struct cell * c4 = theCells;
+      double r_min = theDomain->theParList.rmin;
+      double rho_wind_inner = Mdotinner/4.0/3.14159/r_min/r_min/vwindinner;
+      int q;
+      c4->prim[RHO] = rho_wind_inner;
+      c4->prim[VRR] = vwindinner;
+      c4->prim[PPP] = 1.0e-5*0.5*rho_wind_inner*vwindinner*vwindinner;
+      for( q=3 ; q<NUM_Q ; ++q ){
+         c4->prim[q] = 0.0;
+      }
+   }
+
    int ABSORB_R0 = theDomain->theParList.Absorb_BC;
    if( ABSORB_R0 && rank==0 ){
       struct cell * c3 = theCells+1;

@@ -37,6 +37,11 @@ struct param_list{
    double t_initial, E_ejecta, M_ejecta, v_max, Mdot_wind, v_wind, rho_ISM;
    int Use_PowerLaw, Use_Wind;
 
+   double C_fit, R_fit, p_fit, q_fit, s_fit, t_fit;
+   double SN_Eej, SN_Mej, SN_vmax;
+   double Mdot_inner, Mdot_outer, v_wind_inner, v_wind_outer;
+   int Wind_BC;
+
    double rt_A,rt_B,rt_C,rt_D;
 
 };
