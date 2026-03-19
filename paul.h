@@ -41,7 +41,7 @@ struct param_list{
    double SN_Eej, SN_Mej, SN_vmax;
    double Mdot_inner, Mdot_outer, v_wind_inner, v_wind_outer;
    int Wind_BC;
-   double Presure_Ratio;
+   double Pressure_Ratio;
 
    double rt_A,rt_B,rt_C,rt_D;
 

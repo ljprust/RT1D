@@ -35,18 +35,13 @@ void setICparams( struct domain * theDomain ){
    //vwindouter = theDomain->theParList.v_wind_outer;
    vwindouter = 1000.0*7.0e10/(3000.0*24.0*3600.0);
    rhoISM     = theDomain->theParList.rho_ISM;
-   t0         = theDomain->theParList.T_Start;
+   t0         = theDomain->theParList.t_min;
    pratio     = theDomain->theParList.Pressure_Ratio;
 }
 
 void initial( double * prim , double r , double densRead, double vrRead ){
 
    double rho, P, v, X;
-   double v0, r0, vr, rhoSunny;
-   double npower, deltapower, K, vt, rt;
-   double rhoprefactor, rhoOut, rhoIn;
-   double fh, mpower, thetah, thetap, kasenA, theta, kasenFactor;
-   bool readrho, readvr, kasen, ejecta;
    double Rsun = 7.0e10;
    //double Msun = 2.0e33;
    //double yr = 365.25*24.0*3600.0; // sec
@@ -54,10 +49,6 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    //double Rgas = 8.314e7; // cgs
    //double molarMass = 0.6504; // 63% H, 37% He
    //double constTemp = 100.0; // K
-
-   //v0 = sqrt(4.0/3.0*Eej_SN/Mej_SN);
-   //vr = vmax*r/r0;
-   //rhoSunny = pow(3.0/4.0/3.14159, 1.5) * pow(Mej, 2.5)/pow(Eej, 1.5) /t0/t0/t0 * exp(-vr*vr/v0/v0);
 
    double rho_wind_inner, rho_wind_outer, rho_CEE, rho_SN;
    double r_max;
@@ -83,7 +74,7 @@ void initial( double * prim , double r , double densRead, double vrRead ){
    }
 
    if(isCEE) {
-      rho = rhoCEE;
+      rho = rho_CEE;
       v = r*t0;
       X = 1.0;
    } else if(isInner) {
@@ -100,7 +91,7 @@ void initial( double * prim , double r , double densRead, double vrRead ){
       X = 0.0;
    }
 
-   P = pratio*0.5*rho*vmax*vmax;
+   P = pratio*0.5*rho*v*v;
    //P = 1.0e4*Rgas/molarMass*constTemp*rho;
  
    prim[RHO] = rho;
